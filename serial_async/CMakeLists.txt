@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(serial)
+project(serial_async)
 
 set(ENV{Boost_DIR})
 set(Boost_ADDITIONAL_VERSIONS "1.54" "1.54.0")
@@ -25,7 +25,7 @@ link_directories(
 )
 
 set(SERIAL_SRCS
-serial.cpp
+serial_async.cpp
 )
 
 add_executable(serial
