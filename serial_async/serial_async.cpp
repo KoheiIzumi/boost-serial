@@ -14,7 +14,7 @@ boost::array<char, 64> rbuf;
 void read_callback(const boost::system::error_code& e, std::size_t size)
 {
 	std::cout.write(rbuf.data(), size);
-	port.async_read_some( buffer(rbuf), boost::bind(&read_callback, _1, _2 ));
+	port.async_read_some(buffer(rbuf), boost::bind(&read_callback, _1, _2 ));
 }
 
 void write_callback(const boost::system::error_code& e, std::size_t size )
@@ -36,11 +36,11 @@ int main(int argc, char *argv[])
 	boost::thread thr_io(boost::bind(&io_service::run, &io));
 
 	while(1){
-		port.async_read_some( buffer(rbuf), boost::bind(&read_callback, _1, _2 ));
-		port.async_write_some( buffer(wbuf_on), boost::bind(&write_callback, _1, _2));
+		port.async_read_some(buffer(rbuf), boost::bind(&read_callback, _1, _2 ));
+		port.async_write_some(buffer(wbuf_on), boost::bind(&write_callback, _1, _2));
 		boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
-		port.async_read_some( buffer(rbuf), boost::bind(&read_callback, _1, _2 ));
-		port.async_write_some( buffer(wbuf_off), boost::bind(&write_callback, _1, _2));
+		port.async_read_some(buffer(rbuf), boost::bind(&read_callback, _1, _2 ));
+		port.async_write_some(buffer(wbuf_off), boost::bind(&write_callback, _1, _2));
 		boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
 	}
 	return 0;
