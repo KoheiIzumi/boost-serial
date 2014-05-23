@@ -10,7 +10,7 @@ using namespace boost::asio;
 using namespace boost::posix_time;
 
 static bool isRunning(true);
-const char *PORT = "COM1";
+const char *PORT = "COM3";
 io_service io;
 serial_port port( io, PORT );
 boost::array<char, 64> rbuf;
@@ -51,12 +51,12 @@ int main(int argc, char *argv[])
 	const boost::thread thr_wait(&waitKeyPressed);
 
 	//std::string wbuf = argv[1];
-	std::string wbuf = "Hello World\n";
+	std::string wbuf = "on\n";
 	ptime now = second_clock::local_time();
 	std::string logname = to_iso_string(now) + std::string(".log");
 	ofs.open(logname.c_str());
 
-	port.set_option(serial_port_base::baud_rate(115200));
+	port.set_option(serial_port_base::baud_rate(9600));
 	port.set_option(serial_port_base::character_size(8));
 	port.set_option(serial_port_base::flow_control(serial_port_base::flow_control::none));
 	port.set_option(serial_port_base::parity(serial_port_base::parity::none));
@@ -64,10 +64,11 @@ int main(int argc, char *argv[])
 
 	boost::thread thr_io(boost::bind(&io_service::run, &io));
 
+	//port.async_read_some( buffer(rbuf), boost::bind(&read_callback, _1, _2 ));
+
+	port.async_write_some( buffer(wbuf), boost::bind(&write_callback, _1, _2));
+
 	port.async_read_some( buffer(rbuf), boost::bind(&read_callback, _1, _2 ));
-
-	//port.async_write_some( buffer(wbuf), boost::bind(&write_callback, _1, _2));
-
 	while(isRunning){
 		boost::this_thread::sleep(boost::posix_time::milliseconds(2000));
 	}
