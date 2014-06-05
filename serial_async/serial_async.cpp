@@ -1,3 +1,11 @@
+/*--------------------------------------------------*/
+/* @Program name ; serial_async.cpp                 */
+/* @Author : Kohei Izumi                            */
+/* @Comment : Serial communication for PC           */
+/*                                                  */
+/* Copyright(c) 2014 Kohei Izumi                    */
+/*--------------------------------------------------*/
+
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
@@ -11,17 +19,37 @@ io_service io;
 serial_port port( io, PORT );
 boost::array<char, 64> rbuf;
 
+/*--------------------------------------------------*/
+/* Function     : Read callback                     */
+/* NAME         : read_callback                     */
+/* Argument     : error_code& e                     */
+/*              : size                              */
+/* Return value : ---                               */
+/*--------------------------------------------------*/
 void read_callback(const boost::system::error_code& e, std::size_t size)
 {
 	std::cout.write(rbuf.data(), size);
 	port.async_read_some(buffer(rbuf), boost::bind(&read_callback, _1, _2 ));
 }
 
+/*--------------------------------------------------*/
+/* Function     : Write callback                    */
+/* NAME         : write_callback                    */
+/* Argument     : error_code& e                     */
+/*              : size                              */
+/* Return value : ---                               */
+/*--------------------------------------------------*/
 void write_callback(const boost::system::error_code& e, std::size_t size )
 {
 	std::cout << "write :" << size << "byte[s]" << std::endl;
 }
 
+/*--------------------------------------------------*/
+/* Function     : main program                      */ 
+/* NAME         : main                              */
+/* Argument     : ---                               */
+/* Return value : ---                               */
+/*--------------------------------------------------*/
 int main(int argc, char *argv[])
 {
 	std::string wbuf_on = "on\n";
